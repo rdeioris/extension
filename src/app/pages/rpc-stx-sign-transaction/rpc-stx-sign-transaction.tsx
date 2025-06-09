@@ -63,6 +63,7 @@ export function RpcStxSignTransaction() {
     unsignedTxForBroadcast.auth.spendingCondition.fields.length > 0;
   const enableFeeEditor = !(txRequestWasAlreadySignedByOthers || txRequestHasAlreadySetFee);
   const enableNonceEditor = !(txRequestWasAlreadySignedByOthers || txRequestHasAlreadySetNonce);
+  const isSponsored = unsignedTxForBroadcast.auth.sponsorSpendingCondition !== undefined;
 
   async function onApproveTransaction() {
     if (!txRequestHasAlreadySetFee)
@@ -107,6 +108,7 @@ export function RpcStxSignTransaction() {
     />
   );
 
+
   return (
     <RpcTransactionRequestLayout
       title="Sign transaction"
@@ -115,6 +117,7 @@ export function RpcStxSignTransaction() {
       actions={
         <TransactionActionsWithSpend
           isLoading={isLoadingBalance || isLoadingFees}
+	  isSponsored={isSponsored}
           // TODO: Calculate amount if more than fees
           txAmount={createMoney(0, 'STX')}
           onApprove={onApproveTransaction}

@@ -9,6 +9,7 @@ interface GetTransactionActionsArgs {
   isSubmitted: boolean;
   onCancel(): void;
   onApprove(): Promise<void> | void;
+  isSponsored: boolean;
 }
 export function getTransactionActions({
   isError,
@@ -17,6 +18,7 @@ export function getTransactionActions({
   isSubmitted,
   onCancel,
   onApprove,
+  isSponsored,
 }: GetTransactionActionsArgs) {
   if (isLoading) {
     return [
@@ -42,6 +44,17 @@ export function getTransactionActions({
           <CheckmarkIcon color="ink.text-primary" variant="small" />
           <styled.span textStyle="label.02">Submitted</styled.span>
         </HStack>
+      </Button>,
+    ];
+  }
+
+  if (isSponsored) {
+    return [
+      <Button key="cancel" onClick={onCancel} fullWidth variant="outline">
+        <styled.span textStyle="label.02">Cancel</styled.span>
+      </Button>,
+      <Button type="submit" key="approve" onClick={onApprove} fullWidth>
+        <styled.span textStyle="label.02">Approve Sponsored</styled.span>
       </Button>,
     ];
   }

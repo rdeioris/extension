@@ -17,11 +17,13 @@ interface TransactionActionsWithSpendProps {
   isLoading: boolean;
   txAmount: Money;
   onApprove(): Promise<void>;
+  isSponsored: boolean;
 }
 export function TransactionActionsWithSpend({
   isLoading,
   txAmount,
   onApprove,
+  isSponsored,
 }: TransactionActionsWithSpendProps) {
   const { availableBalance, marketData, selectedFee } = useFeeEditorContext();
   const { status } = useRpcTransactionRequest();
@@ -33,7 +35,7 @@ export function TransactionActionsWithSpend({
   }, [marketData, selectedFee?.txFee, txAmount]);
 
   // TODO LEA-2537: Refactor error state
-  const isInsufficientBalance = availableBalance.amount.isLessThan(totalSpend.amount);
+  const isInsufficientBalance = availableBalance.amount.isLessThan(totalSpend.amount) && !isSponsored;
 
   return (
     <Approver.Actions
@@ -44,6 +46,7 @@ export function TransactionActionsWithSpend({
         isError: isInsufficientBalance,
         onCancel: () => closeWindow(),
         onApprove,
+	isSponsored: isSponsored,
       })}
     >
       <TransactionActionsTitle isLoading={isLoading} amount={i18nFormatCurrency(totalSpend)} />
